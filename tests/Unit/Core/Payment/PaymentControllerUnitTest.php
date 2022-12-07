@@ -19,14 +19,18 @@ class PaymentControllerUnitTest extends TestCase
 
     public function testPayment()
     {
+        //Arrange
         $mockPayment = Mockery::mock(stdClass::class, PaymentInterface::class);
         $mockPayment->shouldReceive('makePayment')
             ->once() //times(1)
             ->andReturn(true);
 
         $payment = new PaymentController($mockPayment);
+        
+        //Act
         $response = $payment->execute();
 
+        //Assert
         $this->assertTrue($response);
     }
 }
