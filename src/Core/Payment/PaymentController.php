@@ -10,4 +10,9 @@ class PaymentController
     {
         $this->gateway = $gateway;
     }
+
+    public function execute()
+    {
+        return $this->gateway->makePayment([]);
+    }
 }

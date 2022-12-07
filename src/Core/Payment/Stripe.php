@@ -4,7 +4,7 @@ namespace Core\Payment;
 
 class Stripe implements PaymentInterface
 {
-    public function createPlan() : array
+    public function createPlan() : bool
     {
         return [];
     }
