@@ -4,6 +4,7 @@ namespace Tests\Unit\Core\Orders;
 
 use PHPUnit\Framework\TestCase;
 use Core\Orders\Product;
+use Mockery;
 
 class ProductUnitTest extends TestCase
 {
@@ -76,5 +77,22 @@ class ProductUnitTest extends TestCase
         );
         $this->assertEquals(0.2, $product->getDiscount());
         $this->assertEquals(48, $product->getTotalWithDiscount());
+    }
+
+    public function testExampleMockProduct()
+    {
+        //Just showing how to mock a class that needs parameters in constructor
+        $mockProduct = Mockery::mock(Product::class, [
+                                'abc123',        //ID
+                                'Product',  //Name
+                                10.29,      //Price
+                                2,          //Total
+                            ]);
+        $mockProduct->shouldReceive('getId')
+            ->andReturn('abc123');
+
+        Mockery::close();
+
+        $this->assertTrue(true);    //Only to pass the test, what's important here is how to mock the product
     }
 }
