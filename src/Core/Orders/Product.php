@@ -5,10 +5,16 @@ namespace Core\Orders;
 class Product
 {
     public function __construct(
+        protected string $id,
         protected string $name,
         protected float $price,
         protected int $quantity,
     ) { } 
+    
+    public function getId()
+    {
+        return $this->id;
+    }
     
     public function changeName(string $name)
     {

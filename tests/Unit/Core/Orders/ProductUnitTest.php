@@ -10,10 +10,13 @@ class ProductUnitTest extends TestCase
     public function testAttributes()
     {
         $product = new Product(
+            id: 'id',
             name: 'Product',
             price: 12.59,
             quantity: 5
         );
+        
+        $this->assertEquals('id', $product->getId());
         $this->assertEquals('Product', $product->getName());
         $this->assertEquals(12.59, $product->getPrice());
         $this->assertEquals(5, $product->getQuantity()); 
@@ -31,6 +34,7 @@ class ProductUnitTest extends TestCase
     public function testTotal()
     {
         $product = new Product(
+            id: '1',
             name: 'Product',
             price: 12.59,
             quantity: 5
@@ -41,6 +45,7 @@ class ProductUnitTest extends TestCase
     public function testDiscountLessThanFiveItemsShouldGiveTenPercent()
     {
         $product = new Product(
+            id: '1',
             name: 'Product',
             price: 10,
             quantity: 4
@@ -52,6 +57,7 @@ class ProductUnitTest extends TestCase
     public function testDiscountFiveItemsShouldGiveFifteenPercent()
     {
         $product = new Product(
+            id: '1',
             name: 'Product',
             price: 10,
             quantity: 5
@@ -63,6 +69,7 @@ class ProductUnitTest extends TestCase
     public function testDiscountMoreThanFiveItemsShouldGiveTwentyPercent()
     {
         $product = new Product(
+            id: '1',
             name: 'Product',
             price: 10,
             quantity: 6
