@@ -11,7 +11,19 @@ class Cart
 
     public function add(Product $product)
     {
-        array_push($this->items, $product);
+        $productId = $product->getId();
+
+        //If items doesn't exist, add it with quantity 1
+        if(!array_key_exists($productId, $this->items)) {
+            $this->items[$productId] = [
+                                            'quantity' => 1, 
+                                            'product' => $product
+                                        ];
+        }
+        //Add 1 to quantity 
+        else {
+            $this->items[$productId]['quantity']++;
+        }
     }
 
     public function getItems() : array
@@ -21,6 +33,15 @@ class Cart
 
     public function getTotal() : float
     {
-        return 15;
+        $total = 0;
+
+        foreach($this->items as $item) {
+            $product = $item['product'];
+            $quantity = $item['quantity'];
+
+            $total += $product->getPrice() * $quantity;
+        }
+
+        return $total;
     }
 }
