@@ -26,7 +26,16 @@ class UserController extends Controller
         $users = $this->repository->paginate();
         $items = collect($users->items());
 
-        return UserResource::collection($items);
+        return UserResource::collection($items)
+                    ->additional([
+                        'meta' => [
+                            'total' => $users->total(),
+                            'current_page' => $users->currentPage(),
+                            'last_page' => $users->lastPage(),
+                            'first_page' => $users->firstPage(),
+                            'per_page' => $users->perPage(),
+                        ]
+                    ]);
     }
 
     /**

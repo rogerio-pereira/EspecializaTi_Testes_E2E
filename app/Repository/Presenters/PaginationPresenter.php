@@ -23,7 +23,7 @@ class PaginationPresenter implements PaginatedResponseInterface
     
     public function currentPage() : int
     {
-        return (int) $this->paginator->total() ?? 1;
+        return (int) $this->paginator->currentPage() ?? 1;
     }
     
     public function perPage() : int
