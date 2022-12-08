@@ -11,18 +11,27 @@ use App\Repository\Interfaces\UserRepositoryInterface;
 
 class UserRepositoryTest extends TestCase
 {
+    protected $repository;
+
+    protected function setUp() : void
+    {
+        $this->repository = new UserRepository(new User());
+
+        parent::setUp();
+    }
+
     public function testImplementsInterface()
     {
         $this->assertInstanceOf(
             UserRepositoryInterface::class, 
-            new UserRepository(new User()) 
+            $this->repository 
         );
     }
 
     public function testFindAllEmpty()
     {
-        $repository = new UserRepository(new User());
-        $users = $repository->findAll();
+        $users = $this->repository
+                    ->findAll();
 
         $this->assertIsArray($users);
         $this->assertCount(0, $users);
@@ -32,8 +41,8 @@ class UserRepositoryTest extends TestCase
     {
         User::factory(10)->create();
 
-        $repository = new UserRepository(new User());
-        $users = $repository->findAll();
+        $users = $this->repository
+                    ->findAll();
 
         $this->assertIsArray($users);
         $this->assertCount(10, $users);
