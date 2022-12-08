@@ -90,8 +90,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($email)
     {
-        //
+        $this->repository->delete($email);
+
+        return response()->json([], 204);
     }
 }
