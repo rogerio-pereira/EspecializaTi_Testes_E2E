@@ -218,4 +218,15 @@ class UserApiTest extends TestCase
         $response = $this->putJson($this->url."/{$user->email}", $payload);
         $response->assertStatus($statusCode);
     }
+
+    public function testUpdateNotFound() 
+    {
+        $payload = [
+            'name' => 'Updated User Name',
+            'password' => 'newpassword123',
+        ];
+        $response = $this->putJson($this->url."/fake@email.com", $payload);
+        
+        $response->assertStatus(404);
+    }
 }
