@@ -29,4 +29,49 @@ class UserTest extends TestCase
 
         $this->assertEquals($expectedTraits, $traits);
     }
+
+    public function testFillable()
+    {
+        $fillable = $this->model()->getFillable();
+
+        $expectedFillable = [
+            'name',
+            'email',
+            'password',
+        ];
+
+        $this->assertEquals($expectedFillable, $fillable);
+    }
+
+    public function testHidden()
+    {
+        $hidden = $this->model()->getHidden();
+
+        $expectedHidden = [
+            'password',
+            'remember_token',
+        ];
+
+        $this->assertEquals($expectedHidden, $hidden);
+    }
+
+    public function testCasts()
+    {
+        $casts = $this->model()->getCasts();
+
+        $expectedCasts = [
+            'id' => 'string',
+            'email_verified_at' => 'datetime',
+            //'deleted_at' => 'datetime',
+        ];
+
+        $this->assertEquals($expectedCasts, $casts);
+    }
+
+    public function testIncrementingIsFalse()
+    {
+        $incrementing = $this->model()->incrementing;
+
+        $this->assertFalse($incrementing);
+    }
 }
