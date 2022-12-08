@@ -46,7 +46,11 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+
+        $user = $this->repository->create($data);
+
+        return new UserResource($user);
     }
 
     /**

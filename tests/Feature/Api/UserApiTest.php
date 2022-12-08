@@ -58,4 +58,32 @@ class UserApiTest extends TestCase
             ->assertJsonFragment(['total' => $total])
             ->assertJsonFragment(['current_page' => $page]);
     }
+
+    public function testCreateUser()
+    {
+        $data = [
+            'name' => 'Test Name',
+            'email' => 'test@email.com',
+            'password' => 'abc123',
+        ];
+        $this->assertDatabaseMissing('users', [
+            'name' => 'Test Name',
+            'email' => 'test@email.com',
+        ]);
+
+        $response = $this->postJson($this->url, $data);
+        $response->assertStatus(201)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'email',
+                ]
+            ]);
+
+        $this->assertDatabaseHas('users', [
+            'name' => 'Test Name',
+            'email' => 'test@email.com',
+        ]);
+    }
 }
