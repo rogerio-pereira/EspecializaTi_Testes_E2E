@@ -8,7 +8,7 @@ interface UserRepositoryInterface
 {
    public function findAll() : array;
 
-   public function paginate();
+   public function paginate(int $page = 1) : PaginatedResponseInterface;
 
    public function find(string $email) : ?object;  //return is the same as object|null 
 

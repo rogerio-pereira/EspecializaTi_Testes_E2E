@@ -4,7 +4,9 @@ namespace App\Repository\Eloquent;
 
 use App\Models\User;
 use App\Repository\Exception\NotFoundException;
+use App\Repository\Interfaces\PaginatedResponseInterface;
 use App\Repository\Interfaces\UserRepositoryInterface;
+use App\Repository\Presenters\PaginationPresenter;
 use Exception;
 
 class UserRepository implements UserRepositoryInterface
@@ -20,10 +22,12 @@ class UserRepository implements UserRepositoryInterface
                     ->toArray();
     }
 
-    public function paginate()
+    public function paginate(int $page = 1) : PaginatedResponseInterface
     {
-        return $this->model
+        $users = $this->model
                     ->paginate();
+
+        return new PaginationPresenter($users);
     }
 
     public function find(string $email) : ?object
