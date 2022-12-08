@@ -17,4 +17,10 @@ class UserRepository implements UserRepositoryInterface
                     ->get()
                     ->toArray();
     }
+
+    public function create(array $data) : object
+    {
+        return $this->model
+                    ->create($data);
+    }
 }
