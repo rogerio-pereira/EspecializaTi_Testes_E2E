@@ -13,6 +13,10 @@ class UserApiTest extends TestCase
 {
     protected string $url = '/api/users';
 
+    /*
+     * PROVIDERS
+     */
+    #region providers
     public function dataProviderPagination() : array
     {
         return [
@@ -24,6 +28,78 @@ class UserApiTest extends TestCase
             'total 100 page 2'  =>  ['total' => 100, 'page' => 2, 'itemsInPage' => 15],
         ];
     }
+
+    public function dataProviderCreateUser() : array
+    {
+        return [
+            'ok' => [
+                    'payload' => [
+                        'name' => 'Test Name',
+                        'email' => 'email@email.com',
+                        'password' => 'abc123',
+                    ],
+                    'statusCode' => 201,
+                    'responseStructure' => [
+                        'data' => [
+                            'id',
+                            'name',
+                            'email',
+                        ]
+                    ]
+                ],
+            'validation_required' => [
+                    'payload' => [],
+                    'statusCode' => 422,
+                    'responseStructure' => [
+                        'errors' => [
+                            'name',
+                            'email',
+                            'password',
+                        ]
+                    ]
+                ],
+            'validation_min' => [
+                    'payload' => [
+                        'name' => 'a',
+                        'password' => 'a',
+                    ],
+                    'statusCode' => 422,
+                    'responseStructure' => [
+                        'errors' => [
+                            'name',
+                            'password',
+                        ]
+                    ]
+                ],
+            'validation_max' => [
+                    'payload' => [
+                        'name' => str_pad('a', 256),
+                        'email' => str_pad('a', 256),
+                        'password' => str_pad('a', 16),
+                    ],
+                    'statusCode' => 422,
+                    'responseStructure' => [
+                        'errors' => [
+                            'name',
+                            'email',
+                            'password',
+                        ]
+                    ]
+                ],
+            'validation_email' => [
+                    'payload' => [
+                        'email' => str_pad('aaa', 256),
+                    ],
+                    'statusCode' => 422,
+                    'responseStructure' => [
+                        'errors' => [
+                            'email',
+                        ]
+                    ]
+                ],
+        ];
+    }
+    #endregion providers
 
     /**
      * @dataProvider dataProviderPagination
@@ -59,47 +135,16 @@ class UserApiTest extends TestCase
             ->assertJsonFragment(['current_page' => $page]);
     }
 
-    public function testCreateUser()
-    {
-        $data = [
-            'name' => 'Test Name',
-            'email' => 'test@email.com',
-            'password' => 'abc123',
-        ];
-        $this->assertDatabaseMissing('users', [
-            'name' => 'Test Name',
-            'email' => 'test@email.com',
-        ]);
-
-        $response = $this->postJson($this->url, $data);
-        $response->assertStatus(201)
-            ->assertJsonStructure([
-                'data' => [
-                    'id',
-                    'name',
-                    'email',
-                ]
-            ]);
-
-        $this->assertDatabaseHas('users', [
-            'name' => 'Test Name',
-            'email' => 'test@email.com',
-        ]);
-    }
-
-    public function testCreateUserValidations()
-    {
-        $data = [
-            'email' => 'test@email.com',
-            'password' => 'abc123',
-        ];
-
-        $response = $this->postJson($this->url, $data);
-        $response->assertStatus(422)
-            ->assertJsonStructure([
-                'errors' => [
-                    'name',
-                ]
-            ]);
+    /**
+     * @dataProvider dataProviderCreateUser
+     */
+    public function testCreateUser(
+        array $payload,
+        int $statusCode,
+        array $responseStructure,
+    ) {
+        $response = $this->postJson($this->url, $payload);
+        $response->assertStatus($statusCode)
+            ->assertJsonStructure($responseStructure);
     }
 }
