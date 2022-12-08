@@ -168,4 +168,16 @@ class UserApiTest extends TestCase
         $response = $this->getJson($this->url."/test@email.com");
         $response->assertStatus(404);
     }
+
+    public function testUpdate()
+    {
+        $user = User::factory()->create();
+        $data = [
+            'name' => 'Updated User Name',
+            'password' => 'newpassword123',
+        ];
+
+        $response = $this->putJson($this->url."/{$user->email}", $data);
+        $response->assertStatus(200);
+    }
 }

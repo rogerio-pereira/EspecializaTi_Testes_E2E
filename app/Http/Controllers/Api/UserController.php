@@ -74,9 +74,13 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $email)
     {
-        //
+        $data = $request->all();
+
+        $user = $this->repository->update($email, $data);
+
+        return new UserResource($user);
     }
 
     /**
