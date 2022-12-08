@@ -8,6 +8,8 @@ interface UserRepositoryInterface
 {
    public function findAll() : array;
 
+   public function paginate();
+
    public function find(string $email) : ?object;  //return is the same as object|null 
 
    public function create(array $data) : object;

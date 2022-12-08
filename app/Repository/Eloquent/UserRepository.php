@@ -20,6 +20,12 @@ class UserRepository implements UserRepositoryInterface
                     ->toArray();
     }
 
+    public function paginate()
+    {
+        return $this->model
+                    ->paginate();
+    }
+
     public function find(string $email) : ?object
     {
         return $this->model

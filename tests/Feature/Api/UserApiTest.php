@@ -23,11 +23,31 @@ class UserApiTest extends TestCase
 
     public function testGetUsers()
     {
-        User::factory(20)->create();
+        User::factory(5)->create();
 
         $response = $this->getJson($this->url);
 
         $response->assertStatus(200)
-            ->assertJsonCount(20, 'data');
+            ->assertJsonCount(5, 'data');
+    }
+
+    public function testGetUsersPaginate()
+    {
+        User::factory(50)->create();    
+
+        $response = $this->getJson($this->url);
+
+        $response->assertStatus(200)
+            ->assertJsonCount(15, 'data');
+    }
+
+    public function testGetUsersPaginatePage2()
+    {
+        User::factory(20)->create();
+
+        $response = $this->getJson($this->url.'?page=2');
+
+        $response->assertStatus(200)
+            ->assertJsonCount(5, 'data');
     }
 }
