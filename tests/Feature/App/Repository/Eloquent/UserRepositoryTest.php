@@ -10,16 +10,23 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserRepositoryTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function test_example()
+    public function testFindAllEmpty()
     {
         $repository = new UserRepository(new User());
         $users = $repository->findAll();
 
         $this->assertIsArray($users);
+        $this->assertCount(0, $users);
+    }
+ 
+    public function testFindAll()
+    {
+        User::factory(10)->create();
+
+        $repository = new UserRepository(new User());
+        $users = $repository->findAll();
+
+        $this->assertIsArray($users);
+        $this->assertCount(10, $users);
     }
 }
