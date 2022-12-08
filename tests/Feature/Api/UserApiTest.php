@@ -180,4 +180,16 @@ class UserApiTest extends TestCase
         $response = $this->putJson($this->url."/{$user->email}", $data);
         $response->assertStatus(200);
     }
+
+    public function testUpdateValidation()
+    {
+        $user = User::factory()->create();
+        $data = [
+            'name' => 'Update Name',
+            'password' => 'aa',
+        ];
+
+        $response = $this->putJson($this->url."/{$user->email}", $data);
+        $response->assertStatus(422);
+    }
 }

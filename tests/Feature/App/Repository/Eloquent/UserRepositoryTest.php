@@ -57,14 +57,17 @@ class UserRepositoryTest extends TestCase
         $data = [
             'name' => 'Rogerio Pereira',
             'email' => 'test@test.com',
-            'password' => bcrypt('test123'),
+            'password' => 'test123',
         ];
 
         $user = $this->repository->create($data);
 
         $this->assertNotNull($user);
         $this->assertIsObject($user);
-        $this->assertDatabaseHas('users', $data);
+        $this->assertDatabaseHas('users', [
+            'name' => 'Rogerio Pereira',
+            'email' => 'test@test.com',
+        ]);
     }
 
     public function testCreateException()
@@ -73,7 +76,7 @@ class UserRepositoryTest extends TestCase
 
         $data = [
             'name' => 'Rogerio Pereira',
-            'password' => bcrypt('test123'),
+            'password' => 'test123',
         ];
 
         $user = $this->repository->create($data);
