@@ -30,11 +30,16 @@ class UserRepository implements UserRepositoryInterface
         return new PaginationPresenter($users);
     }
 
-    public function find(string $email) : ?object
+    public function find(string $email) : object
     {
-        return $this->model
+        $user = $this->model
                     ->where('email', $email)
                     ->first();
+
+        if(!$user)
+            throw new NotFoundException('User not found');
+
+        return $user;
     }
 
     public function create(array $data) : object
@@ -54,12 +59,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function delete(string $email) : bool
     {
-        $user = $this->find($email);
-
-        if(!$user) {
-            throw new NotFoundException("User not found");
-        }
-
-        return $user->delete();
+        return $this->find($email)
+                    ->delete();
     }
 }

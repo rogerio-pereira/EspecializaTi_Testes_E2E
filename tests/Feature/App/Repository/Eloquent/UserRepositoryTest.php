@@ -148,8 +148,7 @@ class UserRepositoryTest extends TestCase
 
     public function testFindNotFound()
     {
+        $this->expectException(NotFoundException::class);
         $returnedUser = $this->repository->find('test@test.com');
-
-        $this->assertNull($returnedUser);
     }
 }

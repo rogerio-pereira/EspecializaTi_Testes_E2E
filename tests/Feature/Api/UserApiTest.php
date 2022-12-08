@@ -148,9 +148,8 @@ class UserApiTest extends TestCase
             ->assertJsonStructure($responseStructure);
     }
 
-    public function testFind(
-
-    ) {
+    public function testFind() 
+    {
         $user = User::factory()->create();
 
         $response = $this->getJson($this->url."/{$user->email}");
@@ -162,5 +161,11 @@ class UserApiTest extends TestCase
                     'email',
                 ]
             ]);
+    }
+
+    public function testFindNotFound() 
+    {
+        $response = $this->getJson($this->url."/test@email.com");
+        $response->assertStatus(404);
     }
 }

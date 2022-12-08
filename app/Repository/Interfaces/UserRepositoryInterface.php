@@ -10,7 +10,7 @@ interface UserRepositoryInterface
 
    public function paginate(int $page = 1) : PaginatedResponseInterface;
 
-   public function find(string $email) : ?object;  //return is the same as object|null 
+   public function find(string $email) : object;  //return is the same as object|null 
 
    public function create(array $data) : object;
 
