@@ -5,10 +5,13 @@ namespace Tests\Feature\App\Repository\Eloquent;
 use Tests\TestCase;
 use App\Models\User;
 use App\Repository\Eloquent\UserRepository;
+use App\Repository\Exception\NotFoundException;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Repository\Interfaces\UserRepositoryInterface;
+use Exception;
 use Illuminate\Database\QueryException;
+use Throwable;
 
 class UserRepositoryTest extends TestCase
 {
@@ -95,5 +98,41 @@ class UserRepositoryTest extends TestCase
             'email' => 'test@email.com',
             'name' => 'Rogerio Pereira',
         ]);
+    }
+
+    public function testDelete()
+    {
+        $user = User::factory()->create();
+
+        $this->assertDatabaseHas('users', [
+            'email' => $user->email, 
+            'name' => $user->name
+        ]);
+        $deleted = $this->repository->delete($user->email);
+
+        $this->assertTrue($deleted);
+        $this->assertDatabaseMissing('users', [
+            'email' => $user->email, 
+            'name' => $user->name
+        ]);
+    }
+
+    public function testDeleteException()
+    {
+        $this->assertDatabaseMissing('users', [
+            'email' => 'test@test.com',
+        ]);
+
+        //another way to do it, i prefer uncommented way because is cleaner and readable
+        /*try {
+            $deleted = $this->repository->delete('test@test.com');
+
+            $this->assertTrue(false); //If reached this point something is invalid, it should throw an exception
+        } catch(Throwable $th) {
+            $this->assertInstanceOf(NotFoundException::class, $th);
+        }*/
+
+        $this->expectException(NotFoundException::class);
+        $deleted = $this->repository->delete('test@test.com');
     }
 }
