@@ -3,75 +3,53 @@
 namespace Tests\Unit\App\Models;
 
 use App\Models\User;
-use PHPUnit\Framework\TestCase;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Tests\Unit\App\Models\ModelTestCase;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class UserTest extends TestCase
+class UserTest extends ModelTestCase
 {
     protected function model() : Model
     {
         return new User();
     }
 
-    public function testTraits()
+    protected function expectedTraits() : array
     {
-        $traits = class_uses($this->model());    //Return Traits of class
-        $traits = array_keys($traits);
-
-        $expectedTraits = [
+        return [
             HasApiTokens::class,
             HasFactory::class,
             Notifiable::class,
         ];
-
-        $this->assertEquals($expectedTraits, $traits);
     }
 
-    public function testFillable()
+    protected function expectedFillable() : array
     {
-        $fillable = $this->model()->getFillable();
-
-        $expectedFillable = [
+        return [
             'name',
             'email',
             'password',
         ];
-
-        $this->assertEquals($expectedFillable, $fillable);
     }
 
-    public function testHidden()
+    protected function expectedHidden() : array
     {
-        $hidden = $this->model()->getHidden();
-
-        $expectedHidden = [
+        return [
             'password',
             'remember_token',
         ];
-
-        $this->assertEquals($expectedHidden, $hidden);
     }
 
-    public function testCasts()
+    protected function expectedCasts() : array
     {
-        $casts = $this->model()->getCasts();
-
-        $expectedCasts = [
+        return [
             'id' => 'string',
             'email_verified_at' => 'datetime',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
             //'deleted_at' => 'datetime',
         ];
-
-        $this->assertEquals($expectedCasts, $casts);
-    }
-
-    public function testIncrementingIsFalse()
-    {
-        $incrementing = $this->model()->incrementing;
-
-        $this->assertFalse($incrementing);
     }
 }
