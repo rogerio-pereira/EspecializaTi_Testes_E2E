@@ -55,7 +55,10 @@ class Handler extends ExceptionHandler
             return response()->json(
                                         ['error' => $exception->getMessage()], 
                                         404
-                                    )
+                                    );
         }
+
+        //If exception isn't NotFoundException, return regular exception
+        return parent::render($request, $exception);
     }
 }

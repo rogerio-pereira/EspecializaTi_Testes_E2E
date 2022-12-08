@@ -147,4 +147,20 @@ class UserApiTest extends TestCase
         $response->assertStatus($statusCode)
             ->assertJsonStructure($responseStructure);
     }
+
+    public function testFind(
+
+    ) {
+        $user = User::factory()->create();
+
+        $response = $this->getJson($this->url."/{$user->email}");
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'email',
+                ]
+            ]);
+    }
 }
