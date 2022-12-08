@@ -28,8 +28,8 @@ class UserApiTest extends TestCase
                     'first_page',
                     'per_page',
                 ]
-            ]);
-        $this->assertEquals(0, $response['meta']['total']);
+            ])
+            ->assertJsonFragment(['total' => 0]);
     }
 
     public function testGetUsers()
@@ -59,9 +59,9 @@ class UserApiTest extends TestCase
                     'first_page',
                     'per_page',
                 ]
-            ]);
-        $this->assertEquals(50, $response['meta']['total']);
-        $this->assertEquals(1, $response['meta']['current_page']);
+            ])
+            ->assertJsonFragment(['total' => 50])
+            ->assertJsonFragment(['current_page' => 1]);
     }
 
     public function testGetUsersPaginatePage2()
@@ -71,8 +71,8 @@ class UserApiTest extends TestCase
         $response = $this->getJson($this->url.'?page=2');
 
         $response->assertStatus(200)
-            ->assertJsonCount(5, 'data');
-        $this->assertEquals(20, $response['meta']['total']);
-        $this->assertEquals(2, $response['meta']['current_page']);
+            ->assertJsonCount(5, 'data')
+            ->assertJsonFragment(['total' => 20])
+            ->assertJsonFragment(['current_page' => 2]);
     }
 }
