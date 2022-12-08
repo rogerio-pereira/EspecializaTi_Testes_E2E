@@ -13,25 +13,6 @@ class UserApiTest extends TestCase
 {
     protected string $url = '/api/users';
 
-    public function testGetUsersEmpty()
-    {
-        $response = $this->getJson($this->url);
-
-        $response->assertStatus(200)
-            ->assertJsonCount(0, 'data')
-            ->assertJsonStructure([
-                'data' => [],
-                'meta' => [
-                    'total',
-                    'current_page',
-                    'last_page',
-                    'first_page',
-                    'per_page',
-                ]
-            ])
-            ->assertJsonFragment(['total' => 0]);
-    }
-
     public function testGetUsers()
     {
         User::factory(5)->create();
@@ -42,16 +23,28 @@ class UserApiTest extends TestCase
             ->assertJsonCount(5, 'data');
     }
 
-    public function testGetUsersPaginate()
-    {
-        User::factory(50)->create();
+    /**
+     * @dataProvider dataProviderPagination
+     */
+    public function testGetUsersPaginate(
+        int $total,
+        int $page = 1,
+        int $itemsInPage = 15
+    ) {
+        User::factory($total)->create();
 
-        $response = $this->getJson($this->url);
+        $response = $this->getJson("{$this->url}?page={$page}");
 
         $response->assertStatus(200)
-            ->assertJsonCount(15, 'data')
+            ->assertJsonCount($itemsInPage, 'data')
             ->assertJsonStructure([
-                'data' => [],
+                'data' => [
+                    '*' => [
+                        'id',
+                        'name',
+                        'email',
+                    ]
+                ],
                 'meta' => [
                     'total',
                     'current_page',
@@ -60,19 +53,19 @@ class UserApiTest extends TestCase
                     'per_page',
                 ]
             ])
-            ->assertJsonFragment(['total' => 50])
-            ->assertJsonFragment(['current_page' => 1]);
+            ->assertJsonFragment(['total' => $total])
+            ->assertJsonFragment(['current_page' => $page]);
     }
 
-    public function testGetUsersPaginatePage2()
+    public function dataProviderPagination() : array
     {
-        User::factory(20)->create();
-
-        $response = $this->getJson($this->url.'?page=2');
-
-        $response->assertStatus(200)
-            ->assertJsonCount(5, 'data')
-            ->assertJsonFragment(['total' => 20])
-            ->assertJsonFragment(['current_page' => 2]);
+        return [
+            'paginate empty'    =>  ['total' => 0, 'page' => 1, 'itemsInPage' => 0],
+            'total 15 page 1'   =>  ['total' => 15, 'page' => 1, 'itemsInPage' => 15],
+            'total 40 page 1'   =>  ['total' => 40, 'page' => 1, 'itemsInPage' => 15],
+            'total 40 page 3'   =>  ['total' => 40, 'page' => 3, 'itemsInPage' => 10],
+            'total 20 page 2'   =>  ['total' => 20, 'page' => 2, 'itemsInPage' => 5],
+            'total 100 page 2'  =>  ['total' => 100, 'page' => 2, 'itemsInPage' => 15],
+        ];
     }
 }
