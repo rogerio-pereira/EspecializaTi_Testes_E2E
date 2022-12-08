@@ -8,6 +8,7 @@ use App\Repository\Eloquent\UserRepository;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Repository\Interfaces\UserRepositoryInterface;
+use Illuminate\Database\QueryException;
 
 class UserRepositoryTest extends TestCase
 {
@@ -62,5 +63,17 @@ class UserRepositoryTest extends TestCase
         $this->assertIsObject($user);
 
         $this->assertDatabaseHas('users', $data);
+    }
+
+    public function testCreateException()
+    {
+        $this->expectException(QueryException::class);
+        
+        $data = [
+            'name' => 'Rogerio Pereira',
+            'password' => bcrypt('test123'),
+        ];
+
+        $user = $this->repository->create($data);
     }
 }
