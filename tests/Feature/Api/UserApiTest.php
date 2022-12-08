@@ -99,6 +99,43 @@ class UserApiTest extends TestCase
                 ],
         ];
     }
+
+    public function dataProviderUpdateUser() : array
+    {
+        return [
+            'ok' => [
+                    'payload' => [
+                        'name' => 'Updated User Name',
+                        'password' => 'newpassword123',
+                    ],
+                    'statusCode' => 200,
+                ],
+            'nullable' => [
+                    'payload' => [
+                        'name' => 'Updated User Name',
+                    ],
+                    'statusCode' => 200,
+                ],
+            'validation_required' => [
+                    'payload' => [],
+                    'statusCode' => 422,
+                ],
+            'validation_min' => [
+                    'payload' => [
+                        'name' => 'a',
+                        'password' => 'a',
+                    ],
+                    'statusCode' => 422,
+                ],
+            'validation_max' => [
+                    'payload' => [
+                        'name' => str_pad('a', 256),
+                        'password' => str_pad('a', 16),
+                    ],
+                    'statusCode' => 422,
+                ],
+        ];
+    }
     #endregion providers
 
     /**
@@ -169,27 +206,16 @@ class UserApiTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function testUpdate()
-    {
+    /**
+     * @dataProvider dataProviderUpdateUser
+     */
+    public function testUpdate(
+        array $payload,
+        int $statusCode,
+    ) {
         $user = User::factory()->create();
-        $data = [
-            'name' => 'Updated User Name',
-            'password' => 'newpassword123',
-        ];
 
-        $response = $this->putJson($this->url."/{$user->email}", $data);
-        $response->assertStatus(200);
-    }
-
-    public function testUpdateValidation()
-    {
-        $user = User::factory()->create();
-        $data = [
-            'name' => 'Update Name',
-            'password' => 'aa',
-        ];
-
-        $response = $this->putJson($this->url."/{$user->email}", $data);
-        $response->assertStatus(422);
+        $response = $this->putJson($this->url."/{$user->email}", $payload);
+        $response->assertStatus($statusCode);
     }
 }
