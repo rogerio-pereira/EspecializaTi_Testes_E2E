@@ -7,9 +7,18 @@ use App\Models\User;
 use App\Repository\Eloquent\UserRepository;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Repository\Interfaces\UserRepositoryInterface;
 
 class UserRepositoryTest extends TestCase
 {
+    public function testImplementsInterface()
+    {
+        $this->assertInstanceOf(
+            UserRepositoryInterface::class, 
+            new UserRepository(new User()) 
+        );
+    }
+
     public function testFindAllEmpty()
     {
         $repository = new UserRepository(new User());

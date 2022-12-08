@@ -3,8 +3,9 @@
 namespace App\Repository\Eloquent;
 
 use App\Models\User;
+use App\Repository\Interfaces\UserRepositoryInterface;
 
-class UserRepository
+class UserRepository implements UserRepositoryInterface
 {
     public function __construct(
         protected User $model
