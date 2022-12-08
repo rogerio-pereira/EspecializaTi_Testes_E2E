@@ -2,9 +2,12 @@
 
 namespace Tests\Feature\Api;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use App\Models\User;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+use function PHPUnit\Framework\assertJson;
 
 class UserApiTest extends TestCase
 {
@@ -16,5 +19,15 @@ class UserApiTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([]);
+    }
+
+    public function testGetUsers()
+    {
+        User::factory(20)->create();
+
+        $response = $this->getJson($this->url);
+
+        $response->assertStatus(200)
+            ->assertJsonCount(20, 'data');
     }
 }
