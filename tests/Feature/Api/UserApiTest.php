@@ -18,7 +18,7 @@ class UserApiTest extends TestCase
         $response = $this->getJson($this->url);
 
         $response->assertStatus(200)
-            ->assertJson([]);
+            ->assertJsonCount(0, 'data');
     }
 
     public function testGetUsers()
