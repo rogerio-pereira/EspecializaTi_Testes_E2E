@@ -86,4 +86,20 @@ class UserApiTest extends TestCase
             'email' => 'test@email.com',
         ]);
     }
+
+    public function testCreateUserValidations()
+    {
+        $data = [
+            'email' => 'test@email.com',
+            'password' => 'abc123',
+        ];
+
+        $response = $this->postJson($this->url, $data);
+        $response->assertStatus(422)
+            ->assertJsonStructure([
+                'errors' => [
+                    'name',
+                ]
+            ]);
+    }
 }
